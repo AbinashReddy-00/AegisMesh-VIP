@@ -1,0 +1,121 @@
+!-------------------------------------------------------------------
+! AegisMesh — Access Switch 3 Configuration
+! Device: SW-ACCESS-3
+! Model: Cisco 2960-24TT
+! Role: Management Server (VLAN 30) + Security/Logging Server (VLAN 50)
+! Traces to: SR-01, network-design.md Section 2.2
+!-------------------------------------------------------------------
+
+enable
+configure terminal
+
+!--- Hostname and Domain
+hostname SW-ACCESS-3
+ip domain-name aegismesh.local
+
+!--- Security: Passwords and Access Control
+enable secret AegisMesh2026!
+service password-encryption
+no ip domain-lookup
+banner motd # UNAUTHORIZED ACCESS PROHIBITED - AegisMesh Access Switch 3 #
+
+!--- Console Line Security
+line console 0
+ password ConsoleAccess2026!
+ login
+ logging synchronous
+ exec-timeout 10 0
+exit
+
+!--- VTY Line Security
+line vty 0 15
+ password VTYAccess2026!
+ login
+ transport input ssh
+ exec-timeout 10 0
+exit
+
+!===================================================================
+! VLAN DEFINITIONS (must match SW-CORE)
+!===================================================================
+
+vlan 10
+ name FACULTY
+exit
+vlan 20
+ name APP-SERVERS
+exit
+vlan 30
+ name MANAGEMENT
+exit
+vlan 40
+ name DATABASE
+exit
+vlan 50
+ name SECURITY
+exit
+vlan 60
+ name DMZ
+exit
+vlan 99
+ name NATIVE-UNUSED
+exit
+
+!===================================================================
+! ACCESS PORTS — Management Server (VLAN 30)
+!===================================================================
+
+interface FastEthernet0/1
+ description MGMT-SRV-01
+ switchport mode access
+ switchport access vlan 30
+ spanning-tree portfast
+ no shutdown
+exit
+
+!===================================================================
+! ACCESS PORTS — Security/Logging Server (VLAN 50)
+!===================================================================
+
+interface FastEthernet0/2
+ description SEC-SRV-01-SIEM
+ switchport mode access
+ switchport access vlan 50
+ spanning-tree portfast
+ no shutdown
+exit
+
+!===================================================================
+! TRUNK PORT — Uplink to SW-CORE
+!===================================================================
+
+interface FastEthernet0/24
+ description TRUNK-TO-SW-CORE
+ switchport mode trunk
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10,20,30,40,50,60
+ switchport nonegotiate
+ no shutdown
+exit
+
+!===================================================================
+! SHUTDOWN UNUSED PORTS (Hardening)
+!===================================================================
+
+interface range FastEthernet0/3-23
+ switchport mode access
+ switchport access vlan 99
+ shutdown
+exit
+
+interface GigabitEthernet0/1
+ shutdown
+exit
+
+interface GigabitEthernet0/2
+ shutdown
+exit
+
+!--- Save Configuration
+end
+write memory

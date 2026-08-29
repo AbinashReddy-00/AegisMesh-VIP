@@ -1,0 +1,304 @@
+!-------------------------------------------------------------------
+! AegisMesh — Core Multilayer Switch Configuration (STAGE A: BASELINE)
+! Device: SW-CORE
+! Model: Cisco 3560-24PS
+! Role: Inter-VLAN routing, trunk aggregation, DHCP, baseline connectivity
+!
+! NOTE: This is the STAGE A configuration. It configures all VLANs,
+! trunks, SVIs, DHCP, routing, and defines the ACLs in memory, but
+! does NOT bind the ACLs to the SVIs yet. This allows verifying full
+! Layer 2/Layer 3 baseline connectivity before enabling security controls.
+!-------------------------------------------------------------------
+
+enable
+configure terminal
+
+!--- Hostname and Domain
+hostname SW-CORE
+ip domain-name aegismesh.local
+
+!--- Security: Passwords and Access Control
+enable secret AegisMesh2026!
+service password-encryption
+no ip domain-lookup
+banner motd # UNAUTHORIZED ACCESS PROHIBITED - AegisMesh Core Switch #
+
+!--- Console Line Security
+line console 0
+ password ConsoleAccess2026!
+ login
+ logging synchronous
+ exec-timeout 10 0
+exit
+
+!--- VTY Line Security (SSH only, restricted to Management VLAN)
+username admin privilege 15 secret AdminSSH2026!
+crypto key generate rsa general-keys modulus 1024
+ip ssh version 2
+
+line vty 0 15
+ login local
+ transport input ssh
+ exec-timeout 10 0
+ access-class MGMT-VTY-ACCESS in
+exit
+
+ip access-list standard MGMT-VTY-ACCESS
+ permit 10.10.30.0 0.0.0.255
+ deny any
+exit
+
+!--- Enable IP Routing (required for inter-VLAN routing)
+ip routing
+
+!===================================================================
+! VLAN DEFINITIONS
+!===================================================================
+
+vlan 10
+ name FACULTY
+exit
+vlan 20
+ name APP-SERVERS
+exit
+vlan 30
+ name MANAGEMENT
+exit
+vlan 40
+ name DATABASE
+exit
+vlan 50
+ name SECURITY
+exit
+vlan 60
+ name DMZ
+exit
+vlan 99
+ name NATIVE-UNUSED
+exit
+
+!===================================================================
+! SVI INTERFACES (Inter-VLAN Routing Gateways — NO ACLs in Stage A)
+!===================================================================
+
+interface Vlan10
+ description FACULTY-GATEWAY
+ ip address 10.10.10.1 255.255.255.0
+ no shutdown
+exit
+
+interface Vlan20
+ description APP-SERVERS-GATEWAY
+ ip address 10.10.20.1 255.255.255.0
+ no shutdown
+exit
+
+interface Vlan30
+ description MANAGEMENT-GATEWAY
+ ip address 10.10.30.1 255.255.255.0
+ no shutdown
+exit
+
+interface Vlan40
+ description DATABASE-GATEWAY
+ ip address 10.10.40.1 255.255.255.0
+ no shutdown
+exit
+
+interface Vlan50
+ description SECURITY-LOGGING-GATEWAY
+ ip address 10.10.50.1 255.255.255.0
+ no shutdown
+exit
+
+interface Vlan60
+ description DMZ-GATEWAY
+ ip address 10.10.60.1 255.255.255.0
+ no shutdown
+exit
+
+!===================================================================
+! PHYSICAL INTERFACES
+!===================================================================
+
+!--- Uplink to Edge Router (Routed Port)
+interface GigabitEthernet0/1
+ description UPLINK-TO-R-EDGE
+ no switchport
+ ip address 10.10.0.2 255.255.255.252
+ no shutdown
+exit
+
+!--- Trunk to SW-ACCESS-1 (Faculty + DMZ)
+interface FastEthernet0/1
+ description TRUNK-TO-SW-ACCESS-1
+ switchport mode trunk
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10,20,30,40,50,60
+ switchport nonegotiate
+ no shutdown
+exit
+
+!--- Trunk to SW-ACCESS-2 (App + DB Servers)
+interface FastEthernet0/2
+ description TRUNK-TO-SW-ACCESS-2
+ switchport mode trunk
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10,20,30,40,50,60
+ switchport nonegotiate
+ no shutdown
+exit
+
+!--- Trunk to SW-ACCESS-3 (Management + Security/Logging)
+interface FastEthernet0/3
+ description TRUNK-TO-SW-ACCESS-3
+ switchport mode trunk
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10,20,30,40,50,60
+ switchport nonegotiate
+ no shutdown
+exit
+
+!--- Shutdown unused ports (hardening)
+interface range FastEthernet0/4-24
+ shutdown
+exit
+
+interface GigabitEthernet0/2
+ shutdown
+exit
+
+!===================================================================
+! DHCP SERVER (Faculty VLAN only)
+!===================================================================
+
+ip dhcp excluded-address 10.10.10.1 10.10.10.99
+
+ip dhcp pool FACULTY-POOL
+ network 10.10.10.0 255.255.255.0
+ default-router 10.10.10.1
+ dns-server 10.10.10.1
+exit
+
+!===================================================================
+! ROUTING
+!===================================================================
+
+!--- Default route to Edge Router (for internet-bound traffic)
+ip route 0.0.0.0 0.0.0.0 10.10.0.1
+
+!===================================================================
+! ACCESS CONTROL LIST DEFINITIONS (Defined in memory, bound in Stage B)
+!===================================================================
+
+!-------------------------------------------------------------------
+! ACL: FACULTY-ACCESS
+!-------------------------------------------------------------------
+ip access-list extended FACULTY-ACCESS
+ remark --- PERMIT: Faculty to App Servers (authorized access) ---
+ permit ip 10.10.10.0 0.0.0.255 10.10.20.0 0.0.0.255
+ remark --- PERMIT: Faculty to DMZ (authorized access) ---
+ permit ip 10.10.10.0 0.0.0.255 10.10.60.0 0.0.0.255
+ remark --- DENY: Faculty to Management (lateral movement prevention) ---
+ deny ip 10.10.10.0 0.0.0.255 10.10.30.0 0.0.0.255
+ remark --- DENY: Faculty to Database (must go through app layer) ---
+ deny ip 10.10.10.0 0.0.0.255 10.10.40.0 0.0.0.255
+ remark --- DENY: Faculty to Security/Logging (privileged zone) ---
+ deny ip 10.10.10.0 0.0.0.255 10.10.50.0 0.0.0.255
+ remark --- PERMIT: Faculty to Internet (via default route) ---
+ permit ip 10.10.10.0 0.0.0.255 any
+exit
+
+!-------------------------------------------------------------------
+! ACL: APP-SERVER-ACCESS
+!-------------------------------------------------------------------
+ip access-list extended APP-SERVER-ACCESS
+ remark --- PERMIT: App to Database (authorized data access) ---
+ permit ip 10.10.20.0 0.0.0.255 10.10.40.0 0.0.0.255
+ remark --- PERMIT: App to Security/Logging (log forwarding) ---
+ permit ip 10.10.20.0 0.0.0.255 10.10.50.0 0.0.0.255
+ remark --- PERMIT: App to Faculty (response traffic) ---
+ permit ip 10.10.20.0 0.0.0.255 10.10.10.0 0.0.0.255
+ remark --- PERMIT: App to DMZ (response traffic) ---
+ permit ip 10.10.20.0 0.0.0.255 10.10.60.0 0.0.0.255
+ remark --- DENY: App to Management (lateral movement prevention) ---
+ deny ip 10.10.20.0 0.0.0.255 10.10.30.0 0.0.0.255
+ remark --- DENY: App to all other (default deny) ---
+ deny ip any any
+exit
+
+!-------------------------------------------------------------------
+! ACL: DMZ-ACCESS
+!-------------------------------------------------------------------
+ip access-list extended DMZ-ACCESS
+ remark --- PERMIT: DMZ to App Servers (reverse proxy path) ---
+ permit ip 10.10.60.0 0.0.0.255 10.10.20.0 0.0.0.255
+ remark --- PERMIT: DMZ to Security/Logging (log forwarding) ---
+ permit ip 10.10.60.0 0.0.0.255 10.10.50.0 0.0.0.255
+ remark --- PERMIT: DMZ to Faculty (stateless return traffic for Faculty-initiated requests) ---
+ permit ip 10.10.60.0 0.0.0.255 10.10.10.0 0.0.0.255
+ remark --- DENY: DMZ to Database (critical data protection) ---
+ deny ip 10.10.60.0 0.0.0.255 10.10.40.0 0.0.0.255
+ remark --- DENY: DMZ to Management (privilege escalation prevention) ---
+ deny ip 10.10.60.0 0.0.0.255 10.10.30.0 0.0.0.255
+ remark --- DENY: DMZ to all other (default deny) ---
+ deny ip any any
+exit
+
+!-------------------------------------------------------------------
+! ACL: MGMT-ACCESS
+!-------------------------------------------------------------------
+ip access-list extended MGMT-ACCESS
+ remark --- PERMIT: Mgmt to App Servers (administration) ---
+ permit ip 10.10.30.0 0.0.0.255 10.10.20.0 0.0.0.255
+ remark --- PERMIT: Mgmt to Database (administration) ---
+ permit ip 10.10.30.0 0.0.0.255 10.10.40.0 0.0.0.255
+ remark --- PERMIT: Mgmt to Security/Logging (log review) ---
+ permit ip 10.10.30.0 0.0.0.255 10.10.50.0 0.0.0.255
+ remark --- DENY: Mgmt to all other (restricted zone) ---
+ deny ip any any
+exit
+
+!-------------------------------------------------------------------
+! ACL: DB-ACCESS
+!-------------------------------------------------------------------
+ip access-list extended DB-ACCESS
+ remark --- PERMIT: DB to Security/Logging (log forwarding) ---
+ permit ip 10.10.40.0 0.0.0.255 10.10.50.0 0.0.0.255
+ remark --- PERMIT: DB to App Servers (response traffic) ---
+ permit ip 10.10.40.0 0.0.0.255 10.10.20.0 0.0.0.255
+ remark --- PERMIT: DB to Management (response traffic) ---
+ permit ip 10.10.40.0 0.0.0.255 10.10.30.0 0.0.0.255
+ remark --- DENY: DB to all other (default deny) ---
+ deny ip any any
+exit
+
+!-------------------------------------------------------------------
+! ACL: SEC-ACCESS
+!-------------------------------------------------------------------
+ip access-list extended SEC-ACCESS
+ remark --- PERMIT: SIEM/Monitoring to App Servers ---
+ permit ip 10.10.50.0 0.0.0.255 10.10.20.0 0.0.0.255
+ remark --- PERMIT: SIEM/Monitoring to Database Servers ---
+ permit ip 10.10.50.0 0.0.0.255 10.10.40.0 0.0.0.255
+ remark --- PERMIT: SIEM/Monitoring to DMZ Servers ---
+ permit ip 10.10.50.0 0.0.0.255 10.10.60.0 0.0.0.255
+ remark --- PERMIT: SIEM/Monitoring to Management VLAN ---
+ permit ip 10.10.50.0 0.0.0.255 10.10.30.0 0.0.0.255
+ remark --- DENY: SIEM to Faculty PCs ---
+ deny ip 10.10.50.0 0.0.0.255 10.10.10.0 0.0.0.255
+ remark --- DENY: SIEM to Internet (Exfiltration prevention) ---
+ deny ip 10.10.50.0 0.0.0.255 any
+ remark --- DENY: Default Deny ---
+ deny ip any any
+exit
+
+!===================================================================
+! LOGGING
+!===================================================================
+
+logging 10.10.50.10
+
+!--- Save Configuration
+end
+write memory

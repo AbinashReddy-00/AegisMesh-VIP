@@ -1,0 +1,79 @@
+!-------------------------------------------------------------------
+! AegisMesh — Edge Router Configuration
+! Device: R-EDGE
+! Model: Cisco 2911
+! Role: Internet gateway, inter-site routing, edge ACL enforcement
+! Traces to: SR-01 (network segmentation), network-design.md Section 2.2
+!-------------------------------------------------------------------
+
+enable
+configure terminal
+
+!--- Hostname and Domain
+hostname R-EDGE
+ip domain-name aegismesh.local
+
+!--- Security: Passwords and Access Control
+enable secret AegisMesh2026!
+service password-encryption
+no ip domain-lookup
+banner motd # UNAUTHORIZED ACCESS PROHIBITED - AegisMesh Private Datacenter #
+
+!--- Console Line Security
+line console 0
+ password ConsoleAccess2026!
+ login
+ logging synchronous
+ exec-timeout 10 0
+exit
+
+!--- VTY Line Security (SSH only, restricted to Management VLAN)
+username admin privilege 15 secret AdminSSH2026!
+crypto key generate rsa general-keys modulus 1024
+ip ssh version 2
+
+line vty 0 4
+ login local
+ transport input ssh
+ exec-timeout 10 0
+ access-class MGMT-VTY-ACCESS in
+exit
+
+!--- VTY Access Control: Only Management VLAN can SSH to router
+ip access-list standard MGMT-VTY-ACCESS
+ permit 10.10.30.0 0.0.0.255
+ deny any
+exit
+
+!--- Interface: Connection to Core Switch
+interface GigabitEthernet0/1
+ description LINK-TO-SW-CORE
+ ip address 10.10.0.1 255.255.255.252
+ no shutdown
+exit
+
+!--- Interface: Simulated Internet (unused but documented)
+interface GigabitEthernet0/0
+ description SIMULATED-INTERNET-UPLINK
+ shutdown
+exit
+
+!--- Static Route: Internal networks via SW-CORE
+ip route 10.10.10.0 255.255.255.0 10.10.0.2
+ip route 10.10.20.0 255.255.255.0 10.10.0.2
+ip route 10.10.30.0 255.255.255.0 10.10.0.2
+ip route 10.10.40.0 255.255.255.0 10.10.0.2
+ip route 10.10.50.0 255.255.255.0 10.10.0.2
+ip route 10.10.60.0 255.255.255.0 10.10.0.2
+
+!--- Disable unnecessary services
+no ip http server
+no ip http secure-server
+no cdp run
+
+!--- Logging to Security VLAN
+logging 10.10.50.10
+
+!--- Save Configuration
+end
+write memory
