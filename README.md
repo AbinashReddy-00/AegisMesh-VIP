@@ -19,11 +19,13 @@ An enterprise operates a hybrid infrastructure spanning a **private datacenter**
 
 The AegisMesh platform includes an interactive, glassmorphic Cyber Command Center web dashboard (`http://localhost:8000/`) allowing evaluators to inspect the hybrid topology, run canned attack simulations, evaluate custom zero-trust access requests, and trigger live blast-radius containment.
 
-| Dashboard View | Demonstration Feature |
+| Command Center View | Architectural Coverage & Features |
 |---|---|
-| ![Dashboard Overview](docs/assets/dashboard-overview.png) | **Full Command Center:** Executive KPI telemetry bar, domain filter navigation tabs, and live hybrid asset topology canvas. |
-| ![Scenario E-04 Block](docs/assets/scenario-e04-block.png) | **Threat Interception (E-04):** Direct database bypass attempt blocked by Cisco SVI ACL with live packet flow terminal and 6-factor risk breakdown. |
-| ![Scenario I-01 Containment](docs/assets/scenario-i01-containment.png) | **Blast-Radius Containment (I-01):** Cross-domain lateral movement probe triggers automatic workload isolation, dynamic policy lockdown, and incident logging. |
+| ![Dashboard Overview](docs/assets/dashboard-overview.png) | **Executive Command Center:** Real-time KPI stat bar, 1-click threat simulation suite, live packet flow terminal, and custom Zero-Trust evaluator. |
+| ![Private Datacenter Topology](docs/assets/topology-private-dc.png) | **Private Datacenter Domain:** Cisco Packet Tracer architecture model (VLANs 10–60, SVI routing, and extended ACL enforcement points). |
+| ![AWS Cloud Topology](docs/assets/topology-aws-cloud.png) | **AWS Public Cloud Domain:** Multi-VPC architecture (VPCs A–D), tiered subnets, and security group isolation boundaries. |
+| ![Kubernetes Platform Topology](docs/assets/topology-kubernetes.png) | **Kubernetes Container Domain:** Namespace isolation (`education`, `research`, `finance`), RBAC, and Calico default-deny NetworkPolicies. |
+| ![Blast-Radius Containment & Audit](docs/assets/containment-and-audit.png) | **Containment & Audit Stream:** Active incident quarantine management, 1-click remediation, and immutable security decision audit trail. |
 
 👉 **[View the Complete 2-3 Minute Demonstration Walkthrough Guide](docs/demonstration-guide.md)**
 
