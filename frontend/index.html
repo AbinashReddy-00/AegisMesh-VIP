@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AegisMesh — Executive Cyber Command Center & Decision Engine</title>
+  <link rel="stylesheet" href="/static/css/dashboard.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- ==========================================================================
+       1. Top Header Navigation Bar
+       ========================================================================== -->
+  <header class="header-nav">
+    <div class="brand-section">
+      <div class="brand-logo">🛡️</div>
+      <div class="brand-info">
+        <h1>AEGISMESH</h1>
+        <p>Secure Hybrid Datacenter & Cloud Decision Engine</p>
+      </div>
+    </div>
+
+    <!-- Prominent Simulation Mode Banner & Domain Coverage -->
+    <div class="banner-center">
+      <div class="simulation-pill">
+        <div class="pulsing-indicator"></div>
+        <span>SIMULATION MODE — DEMONSTRATION TELEMETRY</span>
+      </div>
+      <div class="domain-pills">
+        <span class="domain-pill">🏢 Cisco PT DC Model</span>
+        <span class="domain-pill">☁️ AWS Cloud Model</span>
+        <span class="domain-pill">☸️ Kubernetes Model</span>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <div style="font-size: 11px; font-weight: 700; color: #10b981; display: flex; align-items: center; gap: 6px;">
+        <span style="width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 8px #10b981;"></span>
+        DECISION PLANE: ONLINE
+      </div>
+      <a href="/api/docs" target="_blank" class="btn-link">
+        <span>Swagger API Docs</span> ↗
+      </a>
+    </div>
+  </header>
+
+  <!-- ==========================================================================
+       Main Dashboard Container
+       ========================================================================== -->
+  <div class="container">
+
+    <!-- ==========================================================================
+         2. Executive KPI Stat Cards
+         ========================================================================== -->
+    <section class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-icon" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8;">🌐</div>
+        <div class="kpi-info">
+          <div class="kpi-label">Monitored Assets</div>
+          <div class="kpi-val" id="stat-nodes-count">16</div>
+          <div class="kpi-sub">Across 3 Hybrid Domains</div>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">📜</div>
+        <div class="kpi-info">
+          <div class="kpi-label">Active Policies</div>
+          <div class="kpi-val" id="stat-policy-count">6</div>
+          <div class="kpi-sub">Default-Deny Enforced</div>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon" style="background: rgba(236, 72, 153, 0.15); color: #ec4899;">🚨</div>
+        <div class="kpi-info">
+          <div class="kpi-label">Quarantined Nodes</div>
+          <div class="kpi-val" id="stat-contained-count">0</div>
+          <div class="kpi-sub">Blast-Radius Contained</div>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b;">⚡</div>
+        <div class="kpi-info">
+          <div class="kpi-label">Decision Latency</div>
+          <div class="kpi-val">&lt; 1 ms</div>
+          <div class="kpi-sub">Real-Time Evaluation</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         3. Workspace Grid: Hybrid Topology & Attack Simulation
+         ========================================================================== -->
+    <div class="workspace-grid">
+
+      <!-- Left Column: Hybrid Architecture Topology -->
+      <section class="panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span class="title-icon">🌐</span>
+            <span>Hybrid Architecture Topology Canvas</span>
+          </div>
+          <div style="font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">
+            Click node to inspect & target
+          </div>
+        </div>
+
+        <div class="panel-body">
+          <!-- Domain Filter Tabs -->
+          <div class="domain-tabs">
+            <button class="tab-btn active" data-filter="ALL">All Domains (3)</button>
+            <button class="tab-btn" data-filter="PRIVATE_DC">🏢 Private Datacenter</button>
+            <button class="tab-btn" data-filter="AWS_CLOUD">☁️ AWS Cloud</button>
+            <button class="tab-btn" data-filter="KUBERNETES">☸️ Kubernetes</button>
+          </div>
+
+          <!-- Topology Container -->
+          <div class="topology-canvas" id="topology-canvas">
+            <div style="color: var(--text-muted); font-size: 12px; text-align: center; padding: 40px;">
+              Loading hybrid security topology...
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Column: Attack Simulation & Zero-Trust Evaluator -->
+      <section class="panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span class="title-icon">⚡</span>
+            <span>Threat Simulation & Zero-Trust Suite</span>
+          </div>
+          <div style="font-size: 10px; color: #fbbf24; font-weight: 700;">
+            CISCO CANONICAL SCENARIOS
+          </div>
+        </div>
+
+        <div class="panel-body">
+          
+          <!-- 1. Canned Attack Scenario Buttons -->
+          <div class="section-subtitle">
+            <span>🎯</span> 1-Click Attack Traces & Defenses
+          </div>
+          <div class="scenario-cards">
+            <button class="scenario-card-btn" data-scenario="PT-01">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="scenario-tag tag-green">BASELINE ALLOWED</span>
+                <span style="font-size: 9px; color: #94a3b8; font-family: monospace;">SCENARIO 1</span>
+              </div>
+              <div class="scenario-title">Faculty PC → App Server</div>
+              <div class="scenario-desc">Normal academic traffic (HTTP 80)</div>
+            </button>
+
+            <button class="scenario-card-btn" data-scenario="E-04">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="scenario-tag tag-red">THREAT E-04 (BLOCK)</span>
+                <span style="font-size: 9px; color: #94a3b8; font-family: monospace;">SCENARIO 2</span>
+              </div>
+              <div class="scenario-title">Faculty PC → Database Server</div>
+              <div class="scenario-desc">Direct database bypass blocked by SVI ACL</div>
+            </button>
+
+            <button class="scenario-card-btn" data-scenario="E-02">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="scenario-tag tag-red">THREAT E-02 (BLOCK)</span>
+                <span style="font-size: 9px; color: #94a3b8; font-family: monospace;">SCENARIO 3</span>
+              </div>
+              <div class="scenario-title">Compromised App → Management</div>
+              <div class="scenario-desc">Lateral traversal toward admin stopped</div>
+            </button>
+
+            <button class="scenario-card-btn" data-scenario="ARCH-SCENARIO-01">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="scenario-tag tag-red">ARCH-01 (BLOCK)</span>
+                <span style="font-size: 9px; color: #94a3b8; font-family: monospace;">SCENARIO 4</span>
+              </div>
+              <div class="scenario-title">Database → Faculty PC</div>
+              <div class="scenario-desc">Reverse C2 pivot blocked at database zone</div>
+            </button>
+
+            <button class="scenario-card-btn" data-scenario="I-01" style="grid-column: span 2; border-color: rgba(236, 72, 153, 0.4); background: rgba(236, 72, 153, 0.08);">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="scenario-tag tag-pink">THREAT I-01 — CROSS-DOMAIN CONTAINMENT</span>
+                <span style="font-size: 9px; color: #ec4899; font-family: monospace; font-weight: 700;">AUTO-QUARANTINE</span>
+              </div>
+              <div class="scenario-title">Compromised K8s Pod → Finance Database</div>
+              <div class="scenario-desc">Cross-domain lateral exfiltration probe triggers automatic blast-radius quarantine</div>
+            </button>
+          </div>
+
+          <!-- 2. Packet Flow & Traversal Terminal -->
+          <div class="packet-terminal-container">
+            <div class="section-subtitle">
+              <span>📟</span> Packet Flow & Enforcement Terminal
+            </div>
+            <div class="terminal-window" id="packet-terminal">
+              <div class="terminal-row" style="color: var(--text-muted);">
+                System idle. Select an attack scenario above or evaluate a custom access request.
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Custom Zero-Trust Access Evaluator Form -->
+          <div class="section-subtitle">
+            <span>⚙️</span> Custom Zero-Trust Access Request Evaluator
+          </div>
+          <form class="evaluator-form" id="eval-form">
+            <div class="field-group">
+              <label class="field-label" for="eval-source">Source Node</label>
+              <select class="field-select" id="eval-source" required>
+                <option value="">Loading nodes...</option>
+              </select>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label" for="eval-target">Destination Node</label>
+              <select class="field-select" id="eval-target" required>
+                <option value="">Loading nodes...</option>
+              </select>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label" for="eval-action">Action</label>
+              <select class="field-select" id="eval-action" required>
+                <option value="CONNECT">CONNECT (TCP/IP)</option>
+                <option value="READ">READ (Data Query)</option>
+                <option value="WRITE">WRITE (Data Modify)</option>
+                <option value="ADMIN">ADMIN (SSH/Console)</option>
+                <option value="EXECUTE">EXECUTE (Process)</option>
+              </select>
+            </div>
+
+            <button type="submit" class="btn-evaluate">
+              EVALUATE
+            </button>
+          </form>
+
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ==========================================================================
+         4. Decision & 6-Factor Risk Breakdown Output Panel
+         ========================================================================== -->
+    <section class="decision-result-panel" id="decision-panel">
+      <div class="decision-hero-card" style="text-align: center; color: var(--text-muted); padding: 36px;">
+        <div style="font-size: 32px; margin-bottom: 8px;">🛡️</div>
+        <div style="font-size: 14px; font-weight: 600; color: #ffffff;">Ready for Evaluation</div>
+        <div style="font-size: 11px; color: var(--text-secondary); margin-top: 4px;">
+          Execute a canned attack scenario or click 'EVALUATE' above to see the deterministic decision and multi-factor risk breakdown.
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         5. Bottom Grid: Blast-Radius Containment & Real-Time Audit Log
+         ========================================================================== -->
+    <div class="bottom-grid">
+
+      <!-- Blast-Radius Containment & Active Incidents -->
+      <section class="panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span class="title-icon">🚨</span>
+            <span>Blast-Radius Containment & Incidents</span>
+          </div>
+          <button id="btn-manual-quarantine" style="background: var(--status-isolate-bg); border: 1px solid var(--status-isolate); color: var(--status-isolate); font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 4px; cursor: pointer;">
+            + Quarantine Selected Node
+          </button>
+        </div>
+        <div class="panel-body">
+          <div class="feed-list" id="incident-list">
+            <div style="color: var(--text-muted); font-size: 11px; padding: 10px;">Loading incident feed...</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Live Audit & Decision Telemetry Stream -->
+      <section class="panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span class="title-icon">📜</span>
+            <span>Live Decision Audit Trail</span>
+          </div>
+          <div style="font-size: 10px; color: var(--text-muted); font-family: var(--font-mono);">
+            Immutable Security Ledger
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="feed-list" id="audit-list">
+            <div style="color: var(--text-muted); font-size: 11px; padding: 10px;">Loading audit trail...</div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ==========================================================================
+         6. Footer
+         ========================================================================== -->
+    <footer class="footer-bar">
+      <div><strong>AegisMesh Security Control Plane</strong> — Cisco Virtual Internship 2026 Cyber Security</div>
+      <div style="margin-top: 4px; color: var(--text-muted);">
+        Private DC Implemented in Cisco Packet Tracer • AWS & Kubernetes Simulated Architecture Models
+      </div>
+    </footer>
+
+  </div>
+
+  <script type="module" src="/static/js/app.js"></script>
+</body>
+</html>
