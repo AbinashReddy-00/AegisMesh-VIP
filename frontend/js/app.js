@@ -185,12 +185,43 @@ async function refreshDashboard() {
     currentTopology = await api.getTopology();
     renderTopology(currentTopology, onNodeSelect, currentDomainFilter);
     populateDropdowns(currentTopology.nodes);
+    await updateK8sStatus();
     await refreshIncidentsAndLogs();
     refreshKpiStats();
   } catch (err) {
     console.error("Dashboard refresh error:", err);
   }
 }
+
+async function updateK8sStatus() {
+  const statusText = document.getElementById("k8s-status-text");
+  const statusDot = document.getElementById("k8s-status-dot");
+  const statusPill = document.getElementById("k8s-status-pill");
+
+  if (!statusText || !statusDot || !statusPill) return;
+
+  try {
+    const k8s = await api.getK8sStatus();
+    if (k8s.connected) {
+      statusText.textContent = `K8S: CONNECTED (${k8s.cni})`;
+      statusText.style.color = "#38bdf8";
+      statusDot.style.background = "#10b981";
+      statusDot.style.boxShadow = "0 0 8px #10b981";
+      statusPill.style.borderColor = "rgba(16, 185, 129, 0.4)";
+      statusPill.style.background = "rgba(16, 185, 129, 0.1)";
+    } else {
+      statusText.textContent = "K8S: OFFLINE (Simulated)";
+      statusText.style.color = "#f59e0b";
+      statusDot.style.background = "#f59e0b";
+      statusDot.style.boxShadow = "0 0 8px #f59e0b";
+      statusPill.style.borderColor = "rgba(245, 158, 11, 0.3)";
+      statusPill.style.background = "rgba(245, 158, 11, 0.1)";
+    }
+  } catch (e) {
+    statusText.textContent = "K8S: OFFLINE";
+  }
+}
+
 
 function refreshKpiStats() {
   if (!currentTopology) return;
@@ -406,6 +437,7 @@ async function refreshIncidentsAndLogs() {
               [${inc.threat_id}] ${inc.title}
             </div>
             <div class="feed-sub">${inc.workload_name} (${inc.zone}) • Status: <strong>${inc.status}</strong></div>
+            ${inc.containment_actions && inc.containment_actions.length > 0 ? `<div style="font-size: 10px; color: #7dd3fc; margin-top: 3px; font-family: var(--font-mono);">${inc.containment_actions[inc.containment_actions.length - 1]}</div>` : ""}
           </div>
           <div>
             ${

@@ -133,20 +133,58 @@ def simulate_scenario(req: SimulateRequest):
     )
 
 
+@router.get("/kubernetes/status")
+def get_kubernetes_status():
+    from ...integrations.kubernetes_client import k8s_client
+    return k8s_client.get_cluster_status()
+
+
+@router.post("/containment/isolate")
 @router.post("/isolate")
 def isolate_workload(req: IsolateRequest):
-    result = containment_controller.isolate_workload(req.workload_id, req.reason)
+    target_id = req.get_target_id()
+    result = containment_controller.isolate_workload(
+        workload_id=target_id,
+        reason=req.reason,
+        namespace=req.namespace,
+    )
     if "error" in result:
         raise HTTPException(status_code=404, detail=result["error"])
     return result
 
 
+@router.post("/containment/release")
+@router.post("/containment/lift")
 @router.post("/restore")
-def restore_workload(workload_id: str):
-    result = containment_controller.restore_workload(workload_id)
+def restore_workload(workload_id: Optional[str] = None, workload: Optional[str] = None, namespace: Optional[str] = None):
+    target_id = workload_id or workload
+    if not target_id:
+        raise HTTPException(status_code=400, detail="workload_id parameter required.")
+    result = containment_controller.restore_workload(target_id, namespace=namespace)
     if "error" in result:
         raise HTTPException(status_code=404, detail=result["error"])
     return result
+
+
+@router.get("/containment/status")
+def get_containment_status():
+    from ...integrations.kubernetes_client import k8s_client
+    active_k8s = k8s_client.list_active_isolations()
+    contained_workloads = [w for w in store.list_workloads() if w.state.value == "CONTAINED"]
+    return {
+        "total_contained": len(contained_workloads),
+        "contained_workloads": [
+            {
+                "id": w.id,
+                "name": w.name,
+                "domain": w.domain.value,
+                "zone": w.zone.value,
+                "trust_score": w.trust_score,
+            }
+            for w in contained_workloads
+        ],
+        "active_k8s_dynamic_policies": active_k8s,
+    }
 
 
 @router.get("/policies", response_model=List[PolicyRuleSchema])
@@ -162,3 +200,4 @@ def list_incidents():
 @router.get("/audit", response_model=List[AuditLogSchema])
 def list_audit_logs():
     return store.audit_logs
+

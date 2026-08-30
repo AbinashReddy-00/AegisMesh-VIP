@@ -69,10 +69,24 @@ class DecisionEngine:
                 f"Risk verified at {risk_assessment.level.value} ({risk_assessment.score}/100)."
             )
 
-        # 5. Determine Enforcement Layer Description
-        enforcement_layer = self._determine_enforcement_layer(request, final_decision)
-
         threat_id = request.context.threat_id if request.context else None
+
+        # 5. Automatically trigger Containment if verdict is ISOLATE
+        if final_decision == Decision.ISOLATE:
+            from ..containment.controller import containment_controller
+            contain_res = containment_controller.isolate_workload(
+                workload_id=request.source.workload_id,
+                reason=explanation,
+                threat_id=threat_id,
+                namespace=request.source.namespace,
+            )
+            if contain_res.get("enforcement") == "REAL_KUBERNETES_NETWORKPOLICY":
+                enforcement_layer = f"Calico Dynamic NetworkPolicy ({contain_res.get('policy_name')})"
+            else:
+                enforcement_layer = self._determine_enforcement_layer(request, final_decision)
+        else:
+            enforcement_layer = self._determine_enforcement_layer(request, final_decision)
+
 
         response = EvaluateResponse(
             request_id=req_id,
@@ -122,3 +136,4 @@ class DecisionEngine:
 
 
 decision_engine = DecisionEngine()
+

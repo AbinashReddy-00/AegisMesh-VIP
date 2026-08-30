@@ -68,5 +68,11 @@ export const api = {
   async getPolicies() {
     const res = await fetch(`${API_BASE}/policies`);
     return await res.json();
+  },
+
+  async getK8sStatus() {
+    const res = await fetch(`${API_BASE}/kubernetes/status`);
+    return await res.json();
   }
 };
+

@@ -182,5 +182,11 @@ class SimulateResponse(BaseModel):
 
 
 class IsolateRequest(BaseModel):
-    workload_id: str
+    workload_id: Optional[str] = None
+    workload: Optional[str] = None
+    namespace: Optional[str] = None
     reason: str = "Automated Anomaly Threshold Exceeded (Risk > 80)"
+
+    def get_target_id(self) -> str:
+        return self.workload_id or self.workload or "education-app"
+
