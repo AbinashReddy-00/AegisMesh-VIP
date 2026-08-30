@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: education-app
+  namespace: education
+spec:
+  selector:
+    app: education-app
+  ports:
+    - port: 80
+      targetPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: finance-db
+  namespace: finance
+spec:
+  selector:
+    app: finance-db
+  ports:
+    - port: 80
+      targetPort: 80

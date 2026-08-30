@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: education-service-account
+  namespace: education
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: education-reader
+  namespace: education
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "services"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: education-reader-binding
+  namespace: education
+subjects:
+  - kind: ServiceAccount
+    name: education-service-account
+    namespace: education
+roleRef:
+  kind: Role
+  name: education-reader
+  apiGroup: rbac.authorization.k8s.io
