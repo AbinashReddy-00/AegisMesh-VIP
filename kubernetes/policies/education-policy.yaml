@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-education-client
+  namespace: education
+spec:
+  podSelector:
+    matchLabels:
+      app: education-app
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: education-client
+      ports:
+        - protocol: TCP
+          port: 80
