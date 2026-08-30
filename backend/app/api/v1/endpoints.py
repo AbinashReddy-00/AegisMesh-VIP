@@ -201,3 +201,24 @@ def list_incidents():
 def list_audit_logs():
     return store.audit_logs
 
+from ...integrations.siem_client import siem_client
+from ...models.enums import RiskLevel
+
+
+@router.get("/siem/status")
+def get_siem_status():
+    return siem_client.status()
+
+
+@router.get("/siem/events")
+def get_siem_events():
+    return siem_client.list_events()
+
+
+@router.post("/siem/export")
+def export_siem_events():
+    return {
+        "format": "json",
+        "events": siem_client.list_events(),
+        "event_count": len(siem_client.list_events()),
+    }

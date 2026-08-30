@@ -8,6 +8,7 @@ from typing import Dict, Any, Optional
 from ..models.enums import WorkloadState, RiskLevel, Decision, InfrastructureDomain
 from ..models.schemas import IncidentSchema, AuditLogSchema
 from ..database.store import store
+from ..integrations.siem_client import siem_client
 from ..integrations.kubernetes_client import k8s_client
 
 
@@ -125,6 +126,18 @@ class ContainmentController:
             )
         )
 
+        siem_client.log_event(
+            decision=Decision.ISOLATE,
+            risk_score=90,
+            severity=RiskLevel.CRITICAL,
+            source_domain=workload.domain.value,
+            source_workload=workload.id,
+            target=workload.id,
+            containment_status="ACTIVE",
+            threat_id=threat_id,
+            event_type="containment_action",
+        )
+
         return {
             "status": "success",
             "workload_id": workload.id,
@@ -207,6 +220,18 @@ class ContainmentController:
                 threat_id=None,
                 details=f"Workload {workload.id} quarantine lifted and restored to NORMAL. (K8s Policy Released)",
             )
+        )
+
+        siem_client.log_event(
+            decision=Decision.ALLOW,
+            risk_score=15,
+            severity=RiskLevel.LOW,
+            source_domain=workload.domain.value,
+            source_workload=workload.id,
+            target=workload.id,
+            containment_status="RESTORED",
+            threat_id=None,
+            event_type="containment_restore",
         )
 
         return {

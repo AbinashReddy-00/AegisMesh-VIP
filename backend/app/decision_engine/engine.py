@@ -9,6 +9,7 @@ from ..models.schemas import EvaluateRequest, EvaluateResponse, AuditLogSchema
 from ..policy_engine.engine import policy_engine
 from ..risk_engine.engine import risk_engine
 from ..database.store import store
+from ..integrations.siem_client import siem_client
 
 
 class DecisionEngine:
@@ -121,6 +122,20 @@ class DecisionEngine:
                 details=explanation,
             )
         )
+
+        # 7. Send ALLOW/BLOCK decisions to centralized SIEM.
+        # ISOLATE is logged by the Containment Controller after quarantine is applied.
+        if final_decision != Decision.ISOLATE:
+            siem_client.log_event(
+                decision=final_decision,
+                risk_score=risk_assessment.score,
+                severity=risk_assessment.level,
+                source_domain=request.source.domain.value,
+                source_workload=request.source.workload_id,
+                target=request.destination.resource_id,
+                containment_status="NONE",
+                threat_id=threat_id,
+            )
 
         return response
 
