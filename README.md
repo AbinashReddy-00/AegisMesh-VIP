@@ -65,9 +65,9 @@ AegisMesh implements a **three-domain security architecture** with defense-in-de
   │  Trunk Hardening    │  │  NACLs             │  │  RBAC + PSS         │
   │  VTY Restriction    │  │  CloudTrail Logs   │  │  Resource Quotas    │
   │                     │  │                    │  │                     │
-  │  ✅ IMPLEMENTED     │  │  📐 DESIGNED       │  │  📐 DESIGNED        │
-  │  ✅ VALIDATED (PT)  │  │  (Simulated Data)  │  │  (Simulated Data)   │
-  └──────────┬──────────┘  └─────────┬──────────┘  └──────────┬──────────┘
+  │  ✅ IMPLEMENTED     │  │  ✅ TERRAFORM IaC  │  │  ✅ IMPLEMENTED     │
+  │  ✅ VALIDATED (PT)  │  │  ✅ VALIDATED (IaC)│  │  ✅ VALIDATED (K8s) │
+  └──────────┬──────────┘  └─────────┬──────────┘  └─────────┬──────────┘
              │                       │                        │
              └───────────────────────┼────────────────────────┘
                                     │
@@ -146,15 +146,19 @@ python run.py
 |---|---|---|
 | **Private Datacenter Network** | **IMPLEMENTED AND VALIDATED** | Cisco Packet Tracer topology (`packet-tracer/topology.pkt`) |
 | **VLAN Segmentation (6 zones)** | **IMPLEMENTED AND VALIDATED** | `show vlan brief`, device configurations |
-| **Extended ACL Enforcement** | **IMPLEMENTED AND VALIDATED** | `show access-lists` with non-zero match counters |
+| **Extended ACL Enforcement** | **IMPLEMENTED AND VALIDATED** | `show access-lists` with verified match counters |
 | **Trunk Hardening (DTP, Native VLAN 99)** | **IMPLEMENTED AND VALIDATED** | `show interfaces trunk` |
 | **VTY Management Isolation** | **IMPLEMENTED AND VALIDATED** | `MGMT-VTY-ACCESS` ACL on VTY lines |
 | **AegisMesh Security Engine** | **IMPLEMENTED AND RUNNABLE** | FastAPI backend with zero-trust policy, risk, decision, and containment engines |
 | **Cyber Command Center Dashboard** | **IMPLEMENTED AND RUNNABLE** | Interactive web dashboard served live at `http://localhost:8000/` |
-| **AWS Cloud Architecture** | Architecture Design | 378-line specification in `docs/architecture/aws-design.md` |
-| **Kubernetes Architecture** | Architecture Design | 600-line specification in `docs/architecture/kubernetes-design.md` |
-| **Threat Model (STRIDE)** | Complete | 21 threats, 11 trust boundaries, attack trees |
-| **Threat Traceability** | Complete | 8-row matrix (6 canonical + 2 architectural) |
+| **Kubernetes Security Lab** | **LOCALLY IMPLEMENTED & VALIDATED** | Kind cluster + Project Calico CNI + RBAC + NetworkPolicies (`testing/kubernetes/run-k8s-tests.ps1`) |
+| **Dynamic Containment Bridge** | **LOCALLY IMPLEMENTED & VALIDATED** | AegisMesh $\to$ Kubernetes API $\to$ Calico Dynamic Isolation & Release (`testing/kubernetes/test_containment_bridge.py`) |
+| **Automated End-to-End Test Suite** | **IMPLEMENTED & VALIDATED** | 5/5 Scenarios passing (`testing/end-to-end/run_e2e_tests.py`) |
+| **AWS Cloud Infrastructure** | **Terraform Infrastructure Implemented & Locally Validated** | Production 3-Tier Multi-AZ Terraform modules + `terraform validate` passing (Not applied to live AWS) |
+
+| **Threat Model (STRIDE)** | **COMPLETED & DOCUMENTED** | 21 threats, 11 trust boundaries, attack trees |
+| **Threat Traceability** | **COMPLETED & DOCUMENTED** | 14-row authoritative threat matrix (`docs/threat-traceability.md`) |
+
 
 ---
 
