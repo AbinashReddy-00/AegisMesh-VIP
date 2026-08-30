@@ -1,5 +1,10 @@
 # AegisMesh
 
+[![AegisMesh](https://img.shields.io/badge/AegisMesh-Security%20Platform-0073E6?style=flat-square&logo=shield)](https://github.com/AbinashReddy-00/AegisMesh-VIP)
+[![CISCO VIP](https://img.shields.io/badge/CISCO-VIP%202026-FF6B1A?style=flat-square&logo=cisco)](https://www.cisco.com)
+[![Python](https://img.shields.io/badge/Python-51.4%25-3776AB?style=flat-square&logo=python)](https://python.org)
+[![JavaScript](https://img.shields.io/badge/JavaScript-20.8%25-F7DF1E?style=flat-square&logo=javascript)](https://javascript.com)
+
 > **Secure Hybrid Datacenter and Cloud Security Architecture & Decision Engine**  
 > Cisco Virtual Internship 2026 — Cyber Security Project
 
@@ -7,25 +12,25 @@
 
 ## Executive Overview
 
-An enterprise operates a hybrid infrastructure spanning a **private datacenter** and **public cloud (AWS)**. Workloads run as traditional server applications and Kubernetes-orchestrated microservices. Faculty, developers, and engineers access resources from campus and remote locations.
+An enterprise operates a hybrid infrastructure spanning a **private datacenter** and **public cloud (AWS)**. Workloads run as traditional server applications and Kubernetes-orchestrated microservices. The challenge: **how do we prevent lateral movement after compromise?**
 
-> **Primary Security Objective:** If one application or workload is compromised, the compromise must not be able to spread laterally to unauthorized applications, VPCs, Kubernetes workloads, or the private enterprise network.
+> **Primary Security Objective:** If one application or workload is compromised, the compromise must not be able to spread laterally to unauthorized applications, VPCs, Kubernetes workloads, or the datacenter.
 
-**AegisMesh** is the security control and decision architecture that enforces this objective across all infrastructure domains through **Zero-Trust policy evaluation**, **multi-factor risk scoring**, and **automated blast-radius containment**.
+**AegisMesh** is the security control and decision architecture that enforces this objective across all infrastructure domains through **Zero-Trust policy evaluation**, **multi-factor risk scoring**, and **dynamic containment**.
 
 ---
 
 ## 📸 Interactive Cyber Command Center Dashboard
 
-The AegisMesh platform includes an interactive, glassmorphic Cyber Command Center web dashboard (`http://localhost:8000/`) allowing evaluators to inspect the hybrid topology, run canned attack simulations, evaluate custom zero-trust access requests, and trigger live blast-radius containment.
+The AegisMesh platform includes an interactive, glassmorphic Cyber Command Center web dashboard (`http://localhost:8000/`) allowing evaluators to inspect the hybrid topology, run canned attack simulations, and observe real-time containment decisions.
 
 | Command Center View | Architectural Coverage & Features |
 |---|---|
-| ![Dashboard Overview](docs/assets/dashboard-overview.png) | **Executive Command Center:** Real-time KPI stat bar, 1-click threat simulation suite, live packet flow terminal, and custom Zero-Trust evaluator. |
-| ![Private Datacenter Topology](docs/assets/topology-private-dc.png) | **Private Datacenter Domain:** Cisco Packet Tracer architecture model (VLANs 10–60, SVI routing, and extended ACL enforcement points). |
+| ![Dashboard Overview](docs/assets/dashboard-overview.png) | **Executive Command Center:** Real-time KPI stat bar, 1-click threat simulation suite, live packet flow terminal, and custom Zero-Trust decision traceability. |
+| ![Private Datacenter Topology](docs/assets/topology-private-dc.png) | **Private Datacenter Domain:** Cisco Packet Tracer architecture model (VLANs 10–60, SVI routing, and extended ACL enforcement). |
 | ![AWS Cloud Topology](docs/assets/topology-aws-cloud.png) | **AWS Public Cloud Domain:** Multi-VPC architecture (VPCs A–D), tiered subnets, and security group isolation boundaries. |
 | ![Kubernetes Platform Topology](docs/assets/topology-kubernetes.png) | **Kubernetes Container Domain:** Namespace isolation (`education`, `research`, `finance`), RBAC, and Calico default-deny NetworkPolicies. |
-| ![Blast-Radius Containment & Audit](docs/assets/containment-and-audit.png) | **Containment & Audit Stream:** Active incident quarantine management, 1-click remediation, and immutable security decision audit trail. |
+| ![Blast-Radius Containment & Audit](docs/assets/containment-and-audit.png) | **Containment & Audit Stream:** Active incident quarantine management, 1-click remediation, and immutable security decision ledger. |
 
 👉 **[View the Complete 2-3 Minute Demonstration Walkthrough Guide](docs/demonstration-guide.md)**
 
@@ -46,33 +51,33 @@ AegisMesh implements a **three-domain security architecture** with defense-in-de
                          │   MFA + RBAC + Tokens│
                          └──────────┬──────────┘
                                     │
-           ┌────────────────────────┼────────────────────────┐
-           │                        │                        │
-┌──────────┴──────────┐  ┌─────────┴─────────┐  ┌──────────┴──────────┐
-│  PRIVATE DATACENTER │  │    AWS CLOUD       │  │  KUBERNETES CLUSTER │
-│                     │  │                    │  │                     │
-│  6 VLANs + ACLs     │  │  4 VPCs + SGs      │  │  5 Namespaces       │
-│  SVI Routing        │  │  IAM Policies      │  │  NetworkPolicies    │
-│  Trunk Hardening    │  │  NACLs             │  │  RBAC + PSS         │
-│  VTY Restriction    │  │  CloudTrail Logs   │  │  Resource Quotas    │
-│                     │  │                    │  │                     │
-│  ✅ IMPLEMENTED     │  │  📐 DESIGNED       │  │  📐 DESIGNED        │
-│  ✅ VALIDATED (PT)  │  │  (Simulated Data)  │  │  (Simulated Data)   │
-└──────────┬──────────┘  └─────────┬──────────┘  └──────────┬──────────┘
-           │                       │                        │
-           └───────────────────────┼────────────────────────┘
-                                   │
-                        ┌──────────┴──────────┐
-                        │   AEGISMESH ENGINE   │
-                        │   Policy + Risk +    │
-                        │   Containment        │
-                        │   (FastAPI Backend)  │
-                        └──────────┬──────────┘
-                                   │
-                        ┌──────────┴──────────┐
-                        │  COMMAND DASHBOARD  │
-                        │  Live SOC Telemetry │
-                        └─────────────────────┘
+             ┌────────────────────────┼────────────────────────┐
+             │                        │                        │
+  ┌──────────┴──────────┐  ┌─────────┴─────────┐  ┌──────────┴────────┐
+  │  PRIVATE DATACENTER │  │    AWS CLOUD       │  │  KUBERNETES CLUSTER │
+  │                     │  │                    │  │                     │
+  │  6 VLANs + ACLs     │  │  4 VPCs + SGs      │  │  5 Namespaces       │
+  │  SVI Routing        │  │  IAM Policies      │  │  NetworkPolicies    │
+  │  Trunk Hardening    │  │  NACLs             │  │  RBAC + PSS         │
+  │  VTY Restriction    │  │  CloudTrail Logs   │  │  Resource Quotas    │
+  │                     │  │                    │  │                     │
+  │  ✅ IMPLEMENTED     │  │  📐 DESIGNED       │  │  📐 DESIGNED        │
+  │  ✅ VALIDATED (PT)  │  │  (Simulated Data)  │  │  (Simulated Data)   │
+  └──────────┬──────────┘  └─────────┬──────────┘  └──────────┬──────────┘
+             │                       │                        │
+             └───────────────────────┼────────────────────────┘
+                                    │
+                         ┌──────────┴──────────┐
+                         │   AEGISMESH ENGINE   │
+                         │   Policy + Risk +    │
+                         │   Containment        │
+                         │   (FastAPI Backend)  │
+                         └──────────┬──────────┘
+                                    │
+                         ┌──────────┴──────────┐
+                         │  COMMAND DASHBOARD  │
+                         │  Live SOC Telemetry │
+                         └─────────────────────┘
 ```
 
 ---
