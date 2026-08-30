@@ -1,9 +1,13 @@
 # AegisMesh
 
-[![AegisMesh](https://img.shields.io/badge/AegisMesh-Security%20Platform-0073E6?style=flat-square&logo=shield)](https://github.com/AbinashReddy-00/AegisMesh-VIP)
-[![CISCO VIP](https://img.shields.io/badge/CISCO-VIP%202026-FF6B1A?style=flat-square&logo=cisco)](https://www.cisco.com)
-[![Python](https://img.shields.io/badge/Python-51.4%25-3776AB?style=flat-square&logo=python)](https://python.org)
-[![JavaScript](https://img.shields.io/badge/JavaScript-20.8%25-F7DF1E?style=flat-square&logo=javascript)](https://javascript.com)
+<div align="center">
+
+![AegisMesh](https://img.shields.io/badge/AegisMesh-Security%20Platform-0073E6?style=for-the-badge)
+![CISCO VIP](https://img.shields.io/badge/CISCO-VIP%202026-FF6B1A?style=for-the-badge)
+![Python](https://img.shields.io/badge/Python-51.4%25-3776AB?style=for-the-badge)
+![JavaScript](https://img.shields.io/badge/JavaScript-20.8%25-F7DF1E?style=for-the-badge)
+
+</div>
 
 > **Secure Hybrid Datacenter and Cloud Security Architecture & Decision Engine**  
 > Cisco Virtual Internship 2026 — Cyber Security Project
