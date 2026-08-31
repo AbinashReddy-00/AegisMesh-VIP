@@ -247,8 +247,12 @@ class E2EValidationSuite:
         print(f"  RESULT: {passed_count} / {len(self.results)} SCENARIOS PASSED (100% of implemented validation checks passed)")
         print("=" * 72)
 
-    def generate_markdown_report(self, output_path):
-        os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
+    def export_report_markdown(self):
+        """Generates docs/testing/e2e-validation-report.md with complete evidence."""
+        out_dir = os.path.join(PROJECT_ROOT, "docs", "testing")
+        os.makedirs(out_dir, exist_ok=True)
+        report_path = os.path.join(out_dir, "e2e-validation-report.md")
+
         passed_count = sum(1 for r in self.results if r["status"] == "PASS")
         now_str = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
 
