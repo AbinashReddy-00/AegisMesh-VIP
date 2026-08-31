@@ -107,16 +107,20 @@ def simulate_scenario(req: SimulateRequest):
 
     evaluation = decision_engine.evaluate_request(eval_req)
 
-    # If decision is ISOLATE or scenario targets cross-domain containment, trigger containment automatically
-    containment_triggered = False
+    # # If decision is ISOLATE or scenario targets cross-domain containment, trigger containment automatically
+    # containment_triggered = False
+    # containment_details = None
+    # if evaluation.decision == Decision.ISOLATE or scenario.get("threat_id") == "I-01":
+    #     containment_triggered = True
+    #     containment_details = containment_controller.isolate_workload(
+    #         workload_id=src_node.id,
+    #         reason=f"Automated Anomaly Defense triggered by Scenario {scenario['id']} (Threat: {scenario['threat_id']})",
+    #         threat_id=scenario["threat_id"],
+    #     )
+    # Containment is automatically handled by the Decision Engine
+    # when the final verdict is ISOLATE.
+    containment_triggered = evaluation.decision == Decision.ISOLATE
     containment_details = None
-    if evaluation.decision == Decision.ISOLATE or scenario.get("threat_id") == "I-01":
-        containment_triggered = True
-        containment_details = containment_controller.isolate_workload(
-            workload_id=src_node.id,
-            reason=f"Automated Anomaly Defense triggered by Scenario {scenario['id']} (Threat: {scenario['threat_id']})",
-            threat_id=scenario["threat_id"],
-        )
 
     return SimulateResponse(
         scenario_id=scenario["id"],
@@ -201,3 +205,24 @@ def list_incidents():
 def list_audit_logs():
     return store.audit_logs
 
+from ...integrations.siem_client import siem_client
+from ...models.enums import RiskLevel
+
+
+@router.get("/siem/status")
+def get_siem_status():
+    return siem_client.status()
+
+
+@router.get("/siem/events")
+def get_siem_events():
+    return siem_client.list_events()
+
+
+@router.post("/siem/export")
+def export_siem_events():
+    return {
+        "format": "json",
+        "events": siem_client.list_events(),
+        "event_count": len(siem_client.list_events()),
+    }
