@@ -284,7 +284,7 @@ class AWSZeroTrustValidator:
 
         md = f"""# AegisMesh — AWS Zero-Trust Security Validation Report
 
-**Execution Timestamp:** {now}  
+**Execution Timestamp:** {now}
 **Validation Suite:** `testing/aws/validate_aws_security.py`  
 **Target Environment:** LocalStack AWS-Compatible Simulation (`http://localhost:4566`)  
 **Overall Result:** 🟢 **{passed_count} / {len(self.results)} Controls Validated (100% of implemented validation checks passed)**
