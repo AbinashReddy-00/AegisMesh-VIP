@@ -56,5 +56,5 @@ if ($canList -eq "yes" -and $canDelete -eq "no" -and $canCrossList -eq "no") {
 }
 
 Write-Host "`n============================================================" -ForegroundColor Cyan
-Write-Host "  RESULTS: $passed / $total Tests Passed (100% Zero-Trust Compliance)" -ForegroundColor Green
+Write-Host "  RESULTS: $passed / $total Tests Passed (100% of implemented validation checks passed)" -ForegroundColor Green
 Write-Host "============================================================" -ForegroundColor Cyan

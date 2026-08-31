@@ -5,7 +5,7 @@ Write-Host "============================================================" -Foreg
 Write-Host "  AEGISMESH — DYNAMIC KUBERNETES CONTAINMENT BRIDGE TEST" -ForegroundColor Cyan
 Write-Host "============================================================" -ForegroundColor Cyan
 
-python testing/kubernetes/test_containment_bridge.py
+python "$PSScriptRoot/test_containment_bridge.py"
 if ($LASTEXITCODE -eq 0) {
     Write-Host "`n[+] Integration Test Suite Completed Successfully!" -ForegroundColor Green
 } else {

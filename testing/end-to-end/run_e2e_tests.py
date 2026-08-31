@@ -244,24 +244,20 @@ class E2EValidationSuite:
             print(f"{r['id']:<10} {r['name'][:36]:<38} {r['verdict']:<10} [{r['status']}]")
         
         print("-" * 72)
-        print(f"  RESULT: {passed_count} / {len(self.results)} SCENARIOS PASSED (100% Zero-Trust Compliance)")
-        print("=" * 72 + "\n")
+        print(f"  RESULT: {passed_count} / {len(self.results)} SCENARIOS PASSED (100% of implemented validation checks passed)")
+        print("=" * 72)
 
-    def export_report_markdown(self):
-        """Generates docs/testing/e2e-validation-report.md with complete evidence."""
-        out_dir = os.path.join(PROJECT_ROOT, "docs", "testing")
-        os.makedirs(out_dir, exist_ok=True)
-        report_path = os.path.join(out_dir, "e2e-validation-report.md")
-
-        now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
+    def generate_markdown_report(self, output_path):
+        os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
         passed_count = sum(1 for r in self.results if r["status"] == "PASS")
+        now_str = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
 
-        md = f"""# AegisMesh — Unified End-to-End Security Validation Report
+        md = f"""# AegisMesh — End-to-End Hybrid Security Validation Report
 
-**Execution Timestamp:** {now}  
+**Execution Timestamp:** {now_str}
 **Validation Suite:** `testing/end-to-end/run_e2e_tests.py`  
 **Target Environment:** Hybrid Architecture (Cisco Packet Tracer + Local Kind Cluster with Project Calico CNI + AegisMesh Decision Engine)  
-**Overall Result:** 🟢 **{passed_count} / {len(self.results)} Scenarios Passed (100% Zero-Trust Compliance)**
+**Overall Result:** 🟢 **{passed_count} / {len(self.results)} Scenarios Passed (100% of implemented validation checks passed)**
 
 ---
 

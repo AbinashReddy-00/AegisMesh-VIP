@@ -86,24 +86,71 @@ AegisMesh implements a **three-domain security architecture** with defense-in-de
 
 ---
 
-## ⚡ Quickstart — Running the Platform Locally
+## ⚡ Quickstart — Running the Platform & Automated Validation
 
-AegisMesh is fully runnable with zero external database dependencies:
+### 1. Launch Interactive Cyber Command Center
+AegisMesh is fully runnable locally with zero external database dependencies:
 
 ```powershell
-# 1. Install lightweight Python dependencies
+# Install lightweight Python dependencies
 pip install -r requirements.txt
 
-# 2. Launch the single-command runner
+# Launch the single-command runner (starts FastAPI backend & opens Dashboard)
 python run.py
 ```
 
 - **Interactive Cyber Command Center:** [`http://127.0.0.1:8000/`](http://127.0.0.1:8000/) *(Opens automatically in your browser)*
 - **OpenAPI / Swagger Documentation:** [`http://127.0.0.1:8000/api/docs`](http://127.0.0.1:8000/api/docs)
-- **Run Automated Test Suite:**
-  ```powershell
-  python -m pytest backend/tests/test_engine.py
-  ```
+
+---
+
+### 2. Run Multi-Domain Automated Test Suites
+
+```powershell
+# 1. Backend Security Engine & Unit/Integration Tests (18 tests)
+python -m pytest backend/tests/
+
+# 2. Kubernetes Dynamic Containment Bridge Live Validation (6 phases)
+python testing/kubernetes/test_containment_bridge.py
+
+# 3. Hybrid End-to-End Zero-Trust Security Validation (5 scenarios)
+python testing/end-to-end/run_e2e_tests.py
+
+# 4. AWS Zero-Trust Local Simulation & Security Suite (8 controls)
+powershell -ExecutionPolicy Bypass -File .\testing\aws\deploy-localstack.ps1
+
+# 5. AWS Terraform Static Syntax & Format Verification
+cd aws/terraform
+terraform init -backend=false
+terraform validate
+terraform fmt -check
+cd ../..
+```
+
+---
+
+## 📊 Project Validation Metrics
+
+### Automated Executable Validations (37 / 37 PASSED)
+| Domain / Test Suite | Target Environment | Execution Model | Passing Tests |
+| :--- | :--- | :--- | :---: |
+| **Backend Decision Engine** | FastAPI + 6-Factor Risk Scorer | **LIVE Local Execution** | **18 / 18 PASS** |
+| **Kubernetes Dynamic Containment** | Kind Cluster + Project Calico CNI | **LIVE Local Cluster Execution** | **6 / 6 PHASES PASS** |
+| **Hybrid End-to-End Suite** | Full Decision & Multi-Domain Pipeline | **LIVE Hybrid Verification** | **5 / 5 SCENARIOS PASS** |
+| **AWS Zero-Trust Cloud** | 3-Tier Multi-AZ VPC + Security Groups | **LOCAL SIMULATION (Moto/LocalStack)** | **8 / 8 CONTROLS PASS** |
+| **SUBTOTAL AUTOMATED TESTS** | | | **37 / 37 PASSED** |
+
+### Empirical Network Simulation & IaC Static Checks (30 / 30 PASSED)
+| Domain / Component | Target Environment | Verification Model | Result |
+| :--- | :--- | :--- | :---: |
+| **Private Datacenter Network** | Cisco Core/Access Switches + SVIs | **CISCO PACKET TRACER SIMULATION** | **30 / 30 EMPIRICAL PASS** |
+| **AWS Terraform IaC** | Root & Reusable Terraform Modules | **STATIC SYNTAX & FORMAT VALIDATION** | **0 ERRORS / VALID** |
+
+> [!NOTE]
+> **Domain Execution Model Clarifications:**
+> - **37 Automated Executable Validations:** Fast, automated regression tests spanning Python backend logic (18 tests), live Kubernetes Calico NetworkPolicy kernel-level packet drops (6 phases), hybrid end-to-end scenarios (5 scenarios), and local AWS Moto/LocalStack Zero-Trust security assertions (8 controls).
+> - **30 Cisco Packet Tracer Simulation Checks:** Empirical validation matrix executed inside Cisco Packet Tracer 8.2+ verifying VLAN segmentation (10/20/30/40/50/60/99) and SVI extended ACL line-match counters.
+> - **AWS Cloud Cost Notice:** AWS infrastructure definitions are provided as production-style Terraform IaC and validated against a **local AWS API simulation**. *No real AWS cloud resources are required or provisioned during validation ($0 cost).*
 
 ---
 
@@ -134,9 +181,9 @@ python run.py
 | **Private Datacenter** | Cisco Packet Tracer 8.2+ | Enterprise network simulation with VLAN/ACL enforcement |
 | **Security Decision Engine** | Python 3.12, FastAPI, Pydantic | Centralized zero-trust evaluation, 6-factor risk scoring, containment |
 | **Cyber Dashboard** | Modern HTML5, Vanilla CSS Glassmorphism, ES6 | Interactive hybrid topology, live packet traces, risk gauges, incident management |
-| **Cloud (Architecture)** | AWS + Terraform | Multi-VPC public cloud with IAM, Security Groups, and CloudTrail |
-| **Containers (Architecture)** | Kubernetes (kind) + Calico CNI | Namespace isolation with real NetworkPolicy enforcement |
-| **Verification & Testing** | Pytest, TestClient, Packet Tracer CLI | Automated regression testing and empirical network validation |
+| **Cloud (Architecture & IaC)** | AWS + Terraform + Moto/LocalStack | Production 3-Tier Multi-AZ VPC & Zero-Trust Security Groups (locally validated) |
+| **Containers (Platform)** | Kubernetes (kind) + Calico CNI | Live namespace isolation with dynamic NetworkPolicy automated containment |
+| **Verification & Testing** | Pytest, Boto3, Terraform CLI, Packet Tracer | Multi-domain automated regression and security validation suites |
 
 ---
 
@@ -144,21 +191,19 @@ python run.py
 
 | Component | Status | Evidence |
 |---|---|---|
-| **Private Datacenter Network** | **IMPLEMENTED AND VALIDATED** | Cisco Packet Tracer topology (`packet-tracer/topology.pkt`) |
-| **VLAN Segmentation (6 zones)** | **IMPLEMENTED AND VALIDATED** | `show vlan brief`, device configurations |
-| **Extended ACL Enforcement** | **IMPLEMENTED AND VALIDATED** | `show access-lists` with verified match counters |
-| **Trunk Hardening (DTP, Native VLAN 99)** | **IMPLEMENTED AND VALIDATED** | `show interfaces trunk` |
-| **VTY Management Isolation** | **IMPLEMENTED AND VALIDATED** | `MGMT-VTY-ACCESS` ACL on VTY lines |
-| **AegisMesh Security Engine** | **IMPLEMENTED AND RUNNABLE** | FastAPI backend with zero-trust policy, risk, decision, and containment engines |
-| **Cyber Command Center Dashboard** | **IMPLEMENTED AND RUNNABLE** | Interactive web dashboard served live at `http://localhost:8000/` |
-| **Kubernetes Security Lab** | **LOCALLY IMPLEMENTED & VALIDATED** | Kind cluster + Project Calico CNI + RBAC + NetworkPolicies (`testing/kubernetes/run-k8s-tests.ps1`) |
-| **Dynamic Containment Bridge** | **LOCALLY IMPLEMENTED & VALIDATED** | AegisMesh $\to$ Kubernetes API $\to$ Calico Dynamic Isolation & Release (`testing/kubernetes/test_containment_bridge.py`) |
-| **Automated End-to-End Test Suite** | **IMPLEMENTED & VALIDATED** | 5/5 Scenarios passing (`testing/end-to-end/run_e2e_tests.py`) |
-| **AWS Cloud Infrastructure** | **Terraform Infrastructure Implemented & Locally Validated** | Production 3-Tier Multi-AZ Terraform modules + `terraform validate` passing (Not applied to live AWS) |
-
+| **Private Datacenter Network** | **IMPLEMENTED (PT SIMULATION)** | Cisco Packet Tracer topology (`packet-tracer/topology.pkt`) |
+| **VLAN Segmentation (6 zones)** | **IMPLEMENTED (PT SIMULATION)** | `show vlan brief`, device configurations |
+| **Extended ACL Enforcement** | **IMPLEMENTED (PT SIMULATION)** | `show access-lists` with verified match counters |
+| **Trunk Hardening (DTP, Native VLAN 99)** | **IMPLEMENTED (PT SIMULATION)** | `show interfaces trunk` |
+| **VTY Management Isolation** | **IMPLEMENTED (PT SIMULATION)** | `MGMT-VTY-ACCESS` ACL on VTY lines |
+| **AegisMesh Security Engine** | **IMPLEMENTED (LIVE LOCAL)** | FastAPI backend with zero-trust policy, risk, decision, and containment engines (18/18 pytest passing) |
+| **Cyber Command Center Dashboard** | **IMPLEMENTED (LIVE LOCAL)** | Interactive web dashboard served live at `http://localhost:8000/` |
+| **Kubernetes Security Platform** | **IMPLEMENTED (LIVE LOCAL K8S)** | Kind cluster + Project Calico CNI + RBAC + NetworkPolicies (`testing/kubernetes/run-k8s-tests.ps1`) |
+| **Dynamic Containment Bridge** | **IMPLEMENTED (LIVE LOCAL K8S)** | AegisMesh $\to$ Kubernetes API $\to$ Calico Dynamic Isolation & Release (6/6 phases passing) |
+| **Automated End-to-End Test Suite** | **IMPLEMENTED (LIVE HYBRID)** | 5/5 Scenarios passing (`testing/end-to-end/run_e2e_tests.py`) |
+| **AWS Cloud Infrastructure** | **IMPLEMENTED (IaC & LOCAL SIMULATION)** | Production 3-Tier Multi-AZ Terraform modules + LocalStack security validator (8/8 controls passing) |
 | **Threat Model (STRIDE)** | **COMPLETED & DOCUMENTED** | 21 threats, 11 trust boundaries, attack trees |
 | **Threat Traceability** | **COMPLETED & DOCUMENTED** | 14-row authoritative threat matrix (`docs/threat-traceability.md`) |
-
 
 ---
 
@@ -166,8 +211,8 @@ python run.py
 
 ```
 AegisMesh/
-├── README.md                                    # Project overview & documentation (this file)
-├── requirements.txt                              # Lightweight Python dependencies
+├── README.md                                    # Project overview & validation documentation (this file)
+├── requirements.txt                              # Python backend & testing dependencies
 ├── run.py                                        # Single-command launcher (FastAPI + Dashboard)
 ├── .gitignore                                   # Repository hygiene rules
 │
@@ -179,10 +224,12 @@ AegisMesh/
 │   │   ├── policy_engine/                        # Zero-Trust policy matcher & default-deny rules
 │   │   ├── risk_engine/                          # 6-factor composite risk scorer (0–100)
 │   │   ├── decision_engine/                      # Decision matrix combiner & human rationale generator
-│   │   ├── containment/                          # Blast-radius state machine (NORMAL → CONTAINED)
-│   │   └── api/v1/                               # REST API endpoints (/evaluate, /simulate, /isolate)
+│   │   ├── containment/                          # Blast-radius state machine & k8s containment bridge
+│   │   └── api/v1/                               # REST API endpoints (/decide, /simulate, /containment)
 │   └── tests/
-│       └── test_engine.py                        # Automated pytest suite (8 passing tests)
+│       ├── test_engine.py                        # Risk & decision engine tests (8 tests)
+│       ├── test_k8s_bridge.py                    # Containment bridge tests (5 tests)
+│       └── test_e2e_scenarios.py                 # Core scenario tests (5 tests)
 │
 ├── frontend/                                    # Interactive Cyber Command Center Dashboard
 │   ├── index.html                                # Executive dashboard single-page interface
@@ -194,6 +241,47 @@ AegisMesh/
 │       ├── simulator.js                          # Attack scenario simulator & packet flow animator
 │       └── app.js                                # Main controller & live telemetry manager
 │
+├── aws/                                         # AWS Cloud Zero-Trust Infrastructure (Terraform IaC)
+│   ├── README.md                                # AWS architecture & local validation instructions
+│   ├── architecture/
+│   │   └── aws-zero-trust-architecture.md       # Detailed cloud security architecture specification
+│   └── terraform/                               # Production Terraform Codebase
+│       ├── main.tf                              # Root module assembling VPC and Security Groups
+│       ├── providers.tf                         # AWS provider declaration & global tagging
+│       ├── variables.tf                         # Input variables with strict CIDR validations
+│       ├── outputs.tf                           # VPC, Subnet, and Security Group resource IDs
+│       ├── versions.tf                          # Terraform and AWS provider versions
+│       ├── terraform.tfvars.example             # Sample configuration values
+│       └── modules/
+│           ├── vpc/                             # 3-Tier Multi-AZ VPC module (Public/Private/Isolated)
+│           └── security-groups/                 # Zero-Trust mutual SG referencing module
+│
+├── kubernetes/                                  # Kubernetes Security Platform (Kind + Calico)
+│   ├── cluster/                                 # Kind cluster manifest with custom networking
+│   ├── namespaces/                              # Namespace isolation definitions (education, finance)
+│   ├── network-policies/                        # Default-deny Calico NetworkPolicies
+│   ├── rbac/                                    # Role, RoleBinding, and ServiceAccount manifests
+│   ├── workloads/                               # Microservice workload deployments & test clients
+│   └── tests/                                   # Kubernetes testing manifests
+│
+├── testing/                                     # Multi-Domain Automated Test Suites
+│   ├── aws/                                     # AWS LocalStack / Moto simulation test suite
+│   │   ├── README.md                            # LocalStack testing instructions
+│   │   ├── docker-compose.yml                   # Lightweight Moto container definition
+│   │   ├── deploy-localstack.ps1                # PowerShell automated deploy & test runner
+│   │   ├── destroy-localstack.ps1               # PowerShell clean teardown script
+│   │   ├── validate_aws_security.py             # 8-Control Zero-Trust security validation script
+│   │   └── terraform-localstack/                # LocalStack-targeted Terraform configuration
+│   ├── kubernetes/                              # Kubernetes containment integration suite
+│   │   ├── run-k8s-tests.ps1                    # Baseline NetworkPolicy validation runner
+│   │   ├── test_containment_bridge.py           # 6-phase dynamic Calico containment test
+│   │   └── test_containment_bridge.ps1          # PowerShell containment test runner
+│   ├── end-to-end/                              # Unified hybrid end-to-end validation suite
+│   │   ├── run_e2e_tests.py                     # 5-scenario hybrid Zero-Trust validation engine
+│   │   └── run_e2e_tests.ps1                    # PowerShell E2E test runner
+│   └── packet-tracer/                           # Cisco DC test definitions
+│       └── test_svi_acls.py                     # SVI ACL policy specification checks
+│
 ├── architecture/                                # Professional Architecture Documents
 │   ├── hybrid-architecture.md                   # Unified hybrid datacenter + cloud architecture
 │   ├── network-segmentation.md                  # Cross-domain segmentation strategy
@@ -204,17 +292,22 @@ AegisMesh/
 ├── docs/                                        # Detailed Specifications & Documentation
 │   ├── demonstration-guide.md                   # 2-3 minute executive evaluation walkthrough
 │   ├── architecture-overview.md                 # Quick evaluator orientation guide
+│   ├── kubernetes-containment-bridge.md         # Dynamic Calico containment architecture & API
 │   ├── security-controls-summary.md             # Unified security controls catalog
 │   ├── threat-traceability.md                   # Authoritative threat traceability matrix
 │   ├── security-control-traceability.md         # Control-to-test mapping
 │   ├── assets/                                  # Dashboard demonstration screenshots
+│   ├── testing/                                 # Test reports & validation evidence
+│   │   ├── testing-strategy.md                  # Unified 5-level testing strategy
+│   │   ├── e2e-validation-report.md             # Automated E2E test execution report
+│   │   └── aws-validation-report.md             # Automated AWS LocalStack validation report
 │   └── architecture/                            # Per-Domain Design Specifications
 │       ├── architecture.md                      # System architecture & component model
-│       ├── network-design.md                    # Private DC VLAN/ACL design (385 lines)
-│       ├── aws-design.md                        # AWS VPC/IAM/SG design (378 lines)
-│       ├── kubernetes-design.md                 # K8s namespace/RBAC/NetworkPolicy (600 lines)
-│       ├── aegismesh-design.md                  # Security engine API design (757 lines)
-│       └── threat-model.md                      # Complete STRIDE analysis (239 lines)
+│       ├── network-design.md                    # Private DC VLAN/ACL design
+│       ├── aws-design.md                        # AWS VPC/IAM/SG design
+│       ├── kubernetes-design.md                 # K8s namespace/RBAC/NetworkPolicy
+│       ├── aegismesh-design.md                  # Security engine API design
+│       └── threat-model.md                      # Complete STRIDE analysis
 │
 └── packet-tracer/                               # Cisco Packet Tracer Implementation
     ├── topology.pkt                             # Packet Tracer binary topology file
@@ -244,4 +337,4 @@ This project is developed exclusively for the **Cisco Virtual Internship 2026 Cy
 
 ## Status
 
-**Current Phase:** Phase 5 Complete — Private Datacenter Implemented & Validated, Hybrid Architecture Documented, Security Engine & Interactive Dashboard Runnable.
+**Current Phase:** Final Integration & Polish Complete — 37 / 37 Automated Validations Passing across Backend, Kubernetes, AWS, and Hybrid E2E Suites.

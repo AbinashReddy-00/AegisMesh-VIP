@@ -27,13 +27,13 @@ AegisMesh addresses this objective through a **three-domain security architectur
 │  │ PRIVATE        │  │ AWS PUBLIC     │  │ KUBERNETES     │     │
 │  │ DATACENTER     │  │ CLOUD          │  │ CLUSTER        │     │
 │  │                │  │                │  │                │     │
-│  │ 6 VLANs       │  │ 4 VPCs         │  │ 5 Namespaces   │     │
+│  │ 6 VLANs        │  │ 3-Tier Multi-AZ│  │ 2 Workload NS  │     │
 │  │ Extended ACLs  │  │ Security Groups│  │ NetworkPolicies│     │
-│  │ SVI Routing    │  │ IAM Policies   │  │ RBAC           │     │
-│  │ VTY Hardening  │  │ NACLs          │  │ Pod Security   │     │
+│  │ SVI Routing    │  │ Route Tables   │  │ RBAC           │     │
+│  │ VTY Hardening  │  │ Air-Gapped DB  │  │ Dynamic Isolate│     │
 │  │                │  │                │  │                │     │
-│  │ ✅ IMPLEMENTED │  │ 📐 DESIGNED   │  │ 📐 DESIGNED   │     │
-│  │ ✅ VALIDATED   │  │                │  │                │     │
+│  │ ✅ PT SIMULATED│  │ ✅ TERRAFORM IaC│  │ ✅ LIVE LOCAL K8S│     │
+│  │ ✅ VALIDATED   │  │ ✅ LOCAL SIM   │  │ ✅ CALICO CNI  │     │
 │  └───────┬────────┘  └───────┬────────┘  └───────┬────────┘     │
 │          │                   │                   │               │
 │          └───────────────────┼───────────────────┘               │
@@ -42,11 +42,13 @@ AegisMesh addresses this objective through a **three-domain security architectur
 │                   │   AEGISMESH ENGINE  │                        │
 │                   │   Policy + Risk +   │                        │
 │                   │   Containment       │                        │
+│                   │   (FastAPI Backend) │                        │
 │                   └──────────┬──────────┘                        │
 │                              │                                   │
 │                   ┌──────────┴──────────┐                        │
-│                   │   WAZUH SIEM +      │                        │
-│                   │   SECURITY DASHBOARD│                        │
+│                   │  CYBER COMMAND      │                        │
+│                   │  SOC DASHBOARD      │                        │
+│                   │  (SIEM: Future Ext) │                        │
 │                   └─────────────────────┘                        │
 └──────────────────────────────────────────────────────────────────┘
 ```
@@ -57,18 +59,18 @@ AegisMesh addresses this objective through a **three-domain security architectur
 
 | Component | Status | Evidence |
 |---|---|---|
-| **Private Datacenter (Cisco Packet Tracer)** | **IMPLEMENTED AND VALIDATED** | `topology.pkt` + `validation-summary.md` |
-| VLAN Segmentation (6 zones) | **IMPLEMENTED AND VALIDATED** | `SW-CORE.txt`, `SW-ACCESS-1..3.txt` |
-| Extended ACL Enforcement (6 SVIs) | **IMPLEMENTED AND VALIDATED** | `show access-lists` match counters verified |
-| Trunk Hardening (DTP, Native VLAN 99) | **IMPLEMENTED AND VALIDATED** | `show interfaces trunk` configuration |
-| VTY Management Isolation | **IMPLEMENTED AND VALIDATED** | `MGMT-VTY-ACCESS` ACL on VTY lines |
-| **AWS Cloud Architecture** | Architecture Design | `aws-design.md` (378 lines, 16.6 KB) |
-| VPC Isolation (4 VPCs) | Architecture Design | Subnet, SG, NACL, and IAM fully specified |
-| **Kubernetes Architecture** | Architecture Design | `kubernetes-design.md` (600 lines, 15.7 KB) |
-| Namespace Isolation + RBAC | Architecture Design | NetworkPolicy, RBAC, PSS fully specified |
-| **AegisMesh Security Engine** | Architecture Design | `aegismesh-design.md` (757 lines, 27.3 KB) |
-| **Threat Model** | Complete | 21 threats across 6 STRIDE categories |
-| **Threat Traceability** | Complete | 8 matrix rows (6 canonical + 2 architectural) |
+| **AegisMesh Security Engine** | **IMPLEMENTED AND VALIDATED** | FastAPI decision, 6-factor risk, and containment engine (`backend/tests/`, 18/18 tests pass) |
+| **Interactive Cyber Command Center** | **IMPLEMENTED AND VALIDATED** | Live single-page dashboard served at `http://localhost:8000/` |
+| **Kubernetes Container Security** | **IMPLEMENTED AND EMPIRICALLY VALIDATED** | Live local Kind cluster with Project Calico CNI + dynamic NetworkPolicy containment bridge (6/6 phases pass) |
+| **AWS Cloud Infrastructure** | **IMPLEMENTED AS IaC & LOCALLY VALIDATED** | Modular 3-Tier Multi-AZ Terraform code empirically validated against local AWS simulation (8/8 controls pass, $0 cost, not deployed to real AWS) |
+| **Private Datacenter (Cisco Network)** | **IMPLEMENTED AS CISCO PACKET TRACER SIMULATION** | `topology.pkt` + `validation-summary.md` (30/30 empirical matrix verified) |
+| VLAN Segmentation (6 zones) | **IMPLEMENTED (PT SIMULATION)** | `SW-CORE.txt`, `SW-ACCESS-1..3.txt` |
+| Extended ACL Enforcement (6 SVIs) | **IMPLEMENTED (PT SIMULATION)** | `show access-lists` match counters verified |
+| Trunk Hardening (DTP, Native VLAN 99) | **IMPLEMENTED (PT SIMULATION)** | `show interfaces trunk` configuration |
+| VTY Management Isolation | **IMPLEMENTED (PT SIMULATION)** | `MGMT-VTY-ACCESS` ACL on VTY lines |
+| **Threat Model (STRIDE)** | **COMPLETED & DOCUMENTED** | 21 threats across 6 STRIDE categories |
+| **Threat Traceability** | **COMPLETED & DOCUMENTED** | 14-row authoritative threat matrix (`docs/threat-traceability.md`) |
+| **SIEM Ingestion / Log Pipeline** | *FUTURE EXTENSION (NOT IMPLEMENTED)* | Centralized event correlation / Wazuh agent integration |
 
 ---
 

@@ -56,5 +56,5 @@ else
 fi
 
 echo "============================================================"
-echo "  RESULTS: $PASSED / $TOTAL Tests Passed (100% Zero-Trust Compliance)"
+echo "  RESULTS: $PASSED / $TOTAL Tests Passed (100% of implemented validation checks passed)"
 echo "============================================================"

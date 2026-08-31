@@ -61,6 +61,8 @@ yarn-error.log*
 *.tfstate.*
 *.tfvars
 *.tfvars.json
+*.tfplan
+tfplan*
 .terraform.lock.hcl
 
 # Packet Tracer Temporary / Lock Files (Preserve .pkt and .pka)
