@@ -107,16 +107,20 @@ def simulate_scenario(req: SimulateRequest):
 
     evaluation = decision_engine.evaluate_request(eval_req)
 
-    # If decision is ISOLATE or scenario targets cross-domain containment, trigger containment automatically
-    containment_triggered = False
+    # # If decision is ISOLATE or scenario targets cross-domain containment, trigger containment automatically
+    # containment_triggered = False
+    # containment_details = None
+    # if evaluation.decision == Decision.ISOLATE or scenario.get("threat_id") == "I-01":
+    #     containment_triggered = True
+    #     containment_details = containment_controller.isolate_workload(
+    #         workload_id=src_node.id,
+    #         reason=f"Automated Anomaly Defense triggered by Scenario {scenario['id']} (Threat: {scenario['threat_id']})",
+    #         threat_id=scenario["threat_id"],
+    #     )
+    # Containment is automatically handled by the Decision Engine
+    # when the final verdict is ISOLATE.
+    containment_triggered = evaluation.decision == Decision.ISOLATE
     containment_details = None
-    if evaluation.decision == Decision.ISOLATE or scenario.get("threat_id") == "I-01":
-        containment_triggered = True
-        containment_details = containment_controller.isolate_workload(
-            workload_id=src_node.id,
-            reason=f"Automated Anomaly Defense triggered by Scenario {scenario['id']} (Threat: {scenario['threat_id']})",
-            threat_id=scenario["threat_id"],
-        )
 
     return SimulateResponse(
         scenario_id=scenario["id"],

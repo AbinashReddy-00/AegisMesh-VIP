@@ -263,47 +263,80 @@
     </section>
 
     <!-- ==========================================================================
-         5. Bottom Grid: Blast-Radius Containment & Real-Time Audit Log
-         ========================================================================== -->
-    <div class="bottom-grid">
+     5. Bottom Grid: Blast-Radius Containment, Audit Log & SIEM Events
+     ========================================================================== -->
+<div class="bottom-grid">
 
-      <!-- Blast-Radius Containment & Active Incidents -->
-      <section class="panel">
-        <div class="panel-header">
-          <div class="panel-title">
-            <span class="title-icon">🚨</span>
-            <span>Blast-Radius Containment & Incidents</span>
-          </div>
-          <button id="btn-manual-quarantine" style="background: var(--status-isolate-bg); border: 1px solid var(--status-isolate); color: var(--status-isolate); font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 4px; cursor: pointer;">
-            + Quarantine Selected Node
-          </button>
-        </div>
-        <div class="panel-body">
-          <div class="feed-list" id="incident-list">
-            <div style="color: var(--text-muted); font-size: 11px; padding: 10px;">Loading incident feed...</div>
-          </div>
-        </div>
-      </section>
+  <!-- Blast-Radius Containment & Active Incidents -->
+  <section class="panel">
+    <div class="panel-header">
+      <div class="panel-title">
+        <span class="title-icon">🚨</span>
+        <span>Blast-Radius Containment & Incidents</span>
+      </div>
 
-      <!-- Live Audit & Decision Telemetry Stream -->
-      <section class="panel">
-        <div class="panel-header">
-          <div class="panel-title">
-            <span class="title-icon">📜</span>
-            <span>Live Decision Audit Trail</span>
-          </div>
-          <div style="font-size: 10px; color: var(--text-muted); font-family: var(--font-mono);">
-            Immutable Security Ledger
-          </div>
-        </div>
-        <div class="panel-body">
-          <div class="feed-list" id="audit-list">
-            <div style="color: var(--text-muted); font-size: 11px; padding: 10px;">Loading audit trail...</div>
-          </div>
-        </div>
-      </section>
-
+      <button id="btn-manual-quarantine"
+        style="background: var(--status-isolate-bg); border: 1px solid var(--status-isolate); color: var(--status-isolate); font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 4px; cursor: pointer;">
+        + Quarantine Selected Node
+      </button>
     </div>
+
+    <div class="panel-body">
+      <div class="feed-list" id="incident-list">
+        <div style="color: var(--text-muted); font-size: 11px; padding: 10px;">
+          Loading incident feed...
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Live Audit & Decision Telemetry Stream -->
+  <section class="panel">
+    <div class="panel-header">
+      <div class="panel-title">
+        <span class="title-icon">📜</span>
+        <span>Live Decision Audit Trail</span>
+      </div>
+
+      <div style="font-size: 10px; color: var(--text-muted); font-family: var(--font-mono);">
+        Immutable Security Ledger
+      </div>
+    </div>
+
+    <div class="panel-body">
+      <div class="feed-list" id="audit-list">
+        <div style="color: var(--text-muted); font-size: 11px; padding: 10px;">
+          Loading audit trail...
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- SIEM Security Event Monitoring -->
+  <section class="panel">
+    <div class="panel-header">
+      <div class="panel-title">
+        <span class="title-icon">🛡️</span>
+        <span>Live Security Events</span>
+      </div>
+
+      <div style="font-size: 10px; color: var(--text-muted); font-family: var(--font-mono);">
+        SIEM EVENT STREAM
+      </div>
+    </div>
+
+    <div class="panel-body">
+      <div class="feed-list" id="siem-event-list">
+        <div style="color: var(--text-muted); font-size: 11px; padding: 10px;">
+          Loading SIEM events...
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
 
     <!-- ==========================================================================
          6. Footer
